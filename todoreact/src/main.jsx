@@ -10,6 +10,8 @@ import {
 import { Home, Notes } from "./components/index";
 import Layout from "./Layout";
 import DetailNote from "./components/DetailNote";
+import { NoteStore } from "./store/noteStore";
+import { Provider } from "react-redux";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -22,7 +24,7 @@ const router = createBrowserRouter(
 );
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
+  <Provider store={NoteStore}>
     <RouterProvider router={router} />
-  </React.StrictMode>
+  </Provider>
 );

@@ -1,10 +1,12 @@
 import { useParams } from "react-router-dom";
-import { useNote } from "../contexts/NoteContext";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { updateNote } from "../store/noteSlice";
 
 function DetailNote() {
   const { noteId } = useParams();
-  const { notes, updateNote } = useNote();
+  const notes = useSelector((state) => state.notes);
+  const dispatch = useDispatch();
   const note = notes.find((note) => note.id === noteId.toString());
 
   const [isTitleEditable, setIsTitleEditable] = useState(false);
@@ -12,8 +14,10 @@ function DetailNote() {
   const [inputTitle, setInputTitle] = useState(note.title);
   const [inputContent, setInputContent] = useState(note.content);
 
-  const editNote = () => {
-    updateNote(note.id, inputTitle, inputContent);
+  const handleUpdate = () => {
+    dispatch(
+      updateNote({ id: note.id, title: inputTitle, content: inputContent })
+    );
   };
 
   return (
@@ -38,8 +42,8 @@ function DetailNote() {
               className="basis-full w-full text-2xl leading-8 overflow-y-auto scroll-smooth bg-transparent outline-none resize-none"
             />
             <button
-              className="h-10 w-20 bg-blue-900 p-2 hover:scale-105 rounded-lg shadow-md shadow-slate-800 absolute bottom-2 right-4"
-              onClick={editNote}
+              className="h-10 w-20 bg-blue-900 p-2 hover:scale-105 rounded-lg shadow-md shadow-slate-800 absolute bottom-4 right-4"
+              onClick={handleUpdate}
             >
               Save
             </button>

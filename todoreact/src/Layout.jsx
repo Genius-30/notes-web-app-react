@@ -1,63 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { Header } from "./components/index";
-import { NoteProvider } from "./contexts/NoteContext";
+import { useDispatch, useSelector } from "react-redux";
+import { setNotes } from "./store/noteSlice";
 
 function Layout() {
-  const [notes, setNotes] = useState([]);
-
-  const addNote = (title, content) => {
-    setNotes((prev) => [
-      { id: Date.now().toString(), title, content },
-      ...prev,
-    ]);
-  };
-
-  const deleteNote = () => {
-    setNotes((prev) =>
-      prev.filter((eachNote) => eachNote.toogleToDelete !== true)
-    );
-  };
-
-  const updateNote = (id, title, content) => {
-    setNotes((prev) =>
-      prev.map((eachNote) =>
-        eachNote.id === id ? { ...eachNote, title, content } : eachNote
-      )
-    );
-  };
-
-  const selectDeletion = (id) => {
-    setNotes((prev) =>
-      prev.map((eachNote) =>
-        eachNote.id === id
-          ? { ...eachNote, toogleToDelete: !eachNote.toogleToDelete }
-          : eachNote
-      )
-    );
-  };
+  const notes = useSelector((state) => state.notes);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const notes = JSON.parse(localStorage.getItem("notes"));
+    const storedNotes = JSON.parse(localStorage.getItem("notes"));
 
-    if (notes && notes.length > 0) {
-      setNotes(notes);
+    if (storedNotes && storedNotes.length > 0) {
+      dispatch(setNotes(storedNotes));
     }
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     localStorage.setItem("notes", JSON.stringify(notes));
   }, [notes]);
 
   return (
-    <NoteProvider
-      value={{ notes, addNote, deleteNote, updateNote, selectDeletion }}
-    >
-      <div className="bg-slate-900 h-screen w-full p-4 poppins-bold font-bold">
+    <>
+      <div className="bg-slate-900 h-screen w-full p-4 poppins-bold font-bold overflow-hidden">
         <Header />
         <Outlet />
       </div>
-    </NoteProvider>
+    </>
   );
 }
 
