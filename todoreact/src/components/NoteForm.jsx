@@ -2,31 +2,34 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addNote } from "../store/noteSlice";
 
-function NoteForm() {
+function NoteForm({ onCancel }) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
   const disptach = useDispatch();
 
-  const add = (e) => {
+  const handleAddNoteClick = (e) => {
     e.preventDefault();
 
     if (!title && !content) return;
     disptach(addNote({ title, content }));
 
-    setTitle("");
-    setContent("");
+    handleCancelClick();
   };
 
-  const onContentDivClick = () => {
+  const handleCancelClick = () => {
+    return onCancel(), setTitle(""), setContent("");
+  };
+
+  const handleContentDivClick = () => {
     const contentInput = document.getElementById("contentinput");
     contentInput.focus();
   };
 
   return (
-    <div className="h-full w-full border-solid border-2 border-gray-100 rounded-xl py-6 px-4">
+    <div className="h-full w-full bg-slate-900 border-solid border-2 border-gray-100 rounded-xl py-4 px-2 lg:py-6 lg:px-4">
       <form
-        onSubmit={add}
+        onSubmit={handleAddNoteClick}
         className="h-full w-full flex flex-col items-center justify-evenly gap-4"
       >
         <input
@@ -34,11 +37,11 @@ function NoteForm() {
           placeholder="Enter title here..."
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="rounded-lg w-96 h-12 bg-transparent px-2 focus:outline-none caret-gray-100 focus:caret-gray-100 text-gray-100 text-xl lg:text-2xl"
+          className="rounded-lg w-full h-12 bg-transparent px-2 focus:outline-none caret-gray-100 focus:caret-gray-100 text-gray-100 text-xl lg:text-2xl"
         />
         <div
-          className="h-full basis-full rounded-lg w-96 bg-transparent cursor-text"
-          onClick={onContentDivClick}
+          className="h-full w-full basis-full rounded-lg bg-transparent cursor-text"
+          onClick={handleContentDivClick}
         >
           <textarea
             id="contentinput"
@@ -50,12 +53,21 @@ function NoteForm() {
             className="h-full w-full bg-transparent rounded-lg focus:outline-none caret-gray-100 focus:caret-gray-100 text-gray-100 text-lg lg:text-xl px-2 resize-none"
           />
         </div>
-        <button
-          type="submit"
-          className="text-slate-100 bg-blue-900 w-full h-14 rounded-lg hover:bg-blue-800"
-        >
-          Add
-        </button>
+        <div className="h-auto w-full flex items-center gap-2 text-slate-100">
+          <button
+            type="button"
+            onClick={handleCancelClick}
+            className="visible md:hidden w-full h-12 bg-red-600 rounded-lg focus:bg-red-500 p-2"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="w-full h-12 bg-blue-900 rounded-lg focus:bg-blue-800 md:hover:bg-blue-800 p-2"
+          >
+            Add Note
+          </button>
+        </div>
       </form>
     </div>
   );

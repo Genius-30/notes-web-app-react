@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import NoteItem from "./NoteItem";
+import Button from "./Button";
 
 function Home() {
   const notes = useSelector((state) => state.notes);
   const [recentNotes, setRecentNotes] = useState([]);
 
   useEffect(() => {
-    if (notes.length > 3) {
+    if (notes.length > 0) {
       setRecentNotes(notes.slice(0, 4));
     }
   }, [notes]);
@@ -23,13 +24,13 @@ function Home() {
             ) : null}
 
             {notes.length > 0 ? (
-              <div className="max-h-96 md:max-h-full w-full p-2 flex flex-col sm:flex-row md:items-center lg:justify-center gap-4 overflow-scroll md:overflow-scroll">
+              <div className="max-h-96 md:max-h-full w-full p-2 flex flex-col md:flex-row md:items-center lg:justify-center gap-4 overflow-scroll">
                 {recentNotes.map((note) => (
                   <div key={note.id}>
                     <NoteItem
                       height={"auto"}
                       width={"52"}
-                      checkVisible={"hidden"}
+                      checkVisible={false}
                       className={"line-clamp-[10] md:line-clamp-[8]"}
                       note={note}
                     />
@@ -44,9 +45,10 @@ function Home() {
 
             <div>
               <NavLink to={"/notes"}>
-                <div className="bg-blue-900 text-gray-100 rounded-lg p-2 hover:scale-105 hover:shadow-sm hover:shadow-slate-900">
-                  {notes.length > 0 ? "Show all" : "Create note"}
-                </div>
+                <Button
+                  children={notes.length > 0 ? "Show all" : "Create note"}
+                  className="h-10 w-auto"
+                />
               </NavLink>
             </div>
           </div>

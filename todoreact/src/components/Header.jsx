@@ -9,14 +9,14 @@ function MenuButtons() {
       <Button
         children={"Login"}
         bgColor="bg-slate-800"
-        className="h-9 w-24 border-2 border-solid border-slate-800 text-sm py-0"
+        className="h-10 w-24 border-2 border-solid border-slate-800 text-sm py-0"
       />
 
       <Button
         children={"Signup"}
         bgColor="bg-none"
         textColor="text-slate-800"
-        className="h-9 w-24 border-2 border-solid border-slate-800 text-sm"
+        className="h-10 w-24 border-2 border-solid border-slate-800 text-sm"
       />
     </>
   );
@@ -39,8 +39,8 @@ function Header() {
   ];
 
   return (
-    <header className="w-[95%] h-14 fixed top-4 left-[50%] translate-x-[-50%] z-99">
-      <nav className="bg-slate-50 w-full h-full rounded-xl px-6 flex items-center justify-center">
+    <header className="w-[95%] h-14 fixed top-4 left-[50%] translate-x-[-50%] z-[99]">
+      <nav className="bg-slate-50 w-full h-full rounded-xl px-4 md:px-6 flex items-center justify-center">
         <div className="h-full w-full flex items-center justify-between text-slate-800">
           <div className="flex items-center gap-1">
             <img
@@ -61,9 +61,11 @@ function Header() {
 
           <ul
             onClick={handleMenuClick}
-            className={`bg-slate-50 md:bg-transparent w-auto rounded-lg md:rounded-none py-5 px-6 md:p-0 absolute md:static top-16 ${
-              showMenu ? "right-6" : "right-[-165px]"
-            } flex flex-col md:flex-row items-end md:items-center gap-3 md:gap-4 md:text-lg transition-all duration-100 ease-in-out`}
+            className={`bg-slate-50 md:bg-transparent w-auto rounded-lg md:rounded-none py-5 px-6 md:p-0 absolute md:static top-16 right-4 ${
+              showMenu
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 md:opacity-100 -translate-y-[140%] md:translate-y-0"
+            } flex flex-col md:flex-row items-end md:items-center gap-3 md:gap-4 md:text-lg transition-all duration-150 ease-in-out`}
           >
             {navLinks.map((item, index) => {
               return (

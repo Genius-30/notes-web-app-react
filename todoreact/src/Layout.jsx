@@ -22,7 +22,7 @@ function Layout() {
 
   return (
     <>
-      <div className="bg-slate-900 h-screen w-full p-4 poppins-bold font-bold overflow-hidden">
+      <div className="bg-slate-900 h-screen w-full p-2 md:p-4 poppins-bold font-bold overflow-hidden">
         <Header />
         <Outlet />
       </div>
