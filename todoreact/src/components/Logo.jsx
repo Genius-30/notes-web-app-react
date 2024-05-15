@@ -8,7 +8,9 @@ function Logo({ className }) {
         alt="logo"
         className="h-7 md:h-9 w-auto"
       />
-      <h1 className="whitespace-nowrap md:text-xl text-slate-800">Notes App</h1>
+      <h1 className="whitespace-nowrap md:text-xl text-slate-800">
+        Rapid Note
+      </h1>
     </div>
   );
 }
