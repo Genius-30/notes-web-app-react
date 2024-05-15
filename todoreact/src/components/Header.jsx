@@ -1,29 +1,13 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
-import Button from "./Button";
+import { Link, NavLink } from "react-router-dom";
 import { Menu, X } from "lucide-react";
-
-function MenuButtons() {
-  return (
-    <>
-      <Button
-        children={"Login"}
-        bgColor="bg-slate-800"
-        className="h-10 w-24 border-2 border-solid border-slate-800 text-sm py-0"
-      />
-
-      <Button
-        children={"Signup"}
-        bgColor="bg-none"
-        textColor="text-slate-800"
-        className="h-10 w-24 border-2 border-solid border-slate-800 text-sm"
-      />
-    </>
-  );
-}
+import { Logo } from "./index";
+import { useSelector } from "react-redux";
+import AuthButtons from "./AuthButtons";
 
 function Header() {
   const [showMenu, setShowMenu] = useState(false);
+  const authStatus = useSelector((state) => state.auth.status);
 
   const handleMenuClick = () => setShowMenu(!showMenu);
 
@@ -31,25 +15,22 @@ function Header() {
     {
       title: "Home",
       url: "/",
+      enable: true,
     },
     {
       title: "All Notes",
       url: "/notes",
+      enable: authStatus,
     },
   ];
 
   return (
     <header className="w-[95%] h-14 fixed top-4 left-[50%] translate-x-[-50%] z-[99]">
-      <nav className="bg-slate-50 w-full h-full rounded-xl px-4 md:px-6 flex items-center justify-center">
+      <nav className="bg-gray-100 w-full h-full rounded-xl px-4 md:px-6 flex items-center justify-center">
         <div className="h-full w-full flex items-center justify-between text-slate-800">
-          <div className="flex items-center gap-1">
-            <img
-              src="https://cdn-icons-png.flaticon.com/512/5063/5063397.png"
-              alt="logo"
-              className="h-7 w-auto md:h-9"
-            />
-            <h1 className="whitespace-nowrap md:text-xl">Notes App</h1>
-          </div>
+          <Link to={"/"}>
+            <Logo className={"cursor-pointer"} />
+          </Link>
 
           <div onClick={handleMenuClick} className="md:hidden">
             {showMenu ? (
@@ -61,7 +42,7 @@ function Header() {
 
           <ul
             onClick={handleMenuClick}
-            className={`bg-slate-50 md:bg-transparent w-auto rounded-lg md:rounded-none py-5 px-6 md:p-0 absolute md:static top-16 right-4 ${
+            className={`bg-gray-100 md:bg-transparent w-auto rounded-lg md:rounded-none py-5 px-6 md:p-0 absolute md:static top-16 right-4 ${
               showMenu
                 ? "opacity-100 translate-y-0"
                 : "opacity-0 md:opacity-100 -translate-y-[140%] md:translate-y-0"
@@ -69,7 +50,10 @@ function Header() {
           >
             {navLinks.map((item, index) => {
               return (
-                <li key={index}>
+                <li
+                  key={index}
+                  className={`${item.enable ? "visible" : "hidden"}`}
+                >
                   <NavLink
                     to={item.url}
                     className={({ isActive }) =>
@@ -86,12 +70,12 @@ function Header() {
               );
             })}
             <div className="flex md:hidden flex-col gap-3">
-              <MenuButtons />
+              <AuthButtons />
             </div>
           </ul>
 
           <div className="hidden md:flex items-center gap-2">
-            <MenuButtons />
+            <AuthButtons />
           </div>
         </div>
       </nav>
