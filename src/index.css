@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+@font-face {
+    font-family: poppins-bold;
+    src: url(assets/poppins_semibold.ttf);
+}
+
+.poppins-bold {
+    font-family: poppins-bold;
+}
+
+@font-face {
+    font-family: poppins-normal;
+    src: url(assets/poppins_regular.ttf);
+}
+
+.poppins-normal {
+    font-family: poppins-normal;
+}
