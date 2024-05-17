@@ -23,7 +23,7 @@ class AuthService {
       if (userAccount) {
         return await this.login({ email, password });
       } else {
-        return userAccount;
+        return null;
       }
     } catch (error) {
       console.error("AuthService :: createAccount :: error: ", error);
