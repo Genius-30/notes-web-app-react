@@ -42,7 +42,7 @@ const router = createBrowserRouter(
       <Route
         path="notes"
         element={
-          <AuthLayout authentication={false}>
+          <AuthLayout authentication>
             <Notes />
           </AuthLayout>
         }
@@ -50,7 +50,7 @@ const router = createBrowserRouter(
       <Route
         path="notes/:noteId"
         element={
-          <AuthLayout authentication={false}>
+          <AuthLayout authentication>
             <DetailNote />
           </AuthLayout>
         }
