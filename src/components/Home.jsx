@@ -61,7 +61,6 @@ function Home() {
                 to create notes
               </p>
             )}
-            <div>Hello</div>
           </div>
         </div>
       </div>
