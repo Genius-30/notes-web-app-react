@@ -56,7 +56,8 @@ const router = createBrowserRouter(
         }
       />
     </Route>
-  )
+  ),
+  { basename: "/" }
 );
 
 ReactDOM.createRoot(document.getElementById("root")).render(
