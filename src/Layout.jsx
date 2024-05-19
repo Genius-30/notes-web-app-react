@@ -65,7 +65,9 @@ function Layout() {
         <main
           className={`h-full w-full ${showHeader && "mt-20"} oveflow-y-scroll`}
         >
+          <div>Before outlet</div>
           <Outlet />
+          <div>After outlet</div>
         </main>
       </div>
     </>
