@@ -15,13 +15,16 @@ function Layout() {
   const notes = useSelector((state) => state.note.notes);
 
   useEffect(() => {
+    console.log("Layout mounted");
     setLoader(true);
     authService
       .getCurrentUser()
       .then((userData) => {
         if (userData) {
+          console.log("User data:", userData);
           dispatch(login({ userData }));
         } else {
+          console.log("No user data, logging out");
           dispatch(logout());
         }
       })
