@@ -15,16 +15,13 @@ function Layout() {
   const notes = useSelector((state) => state.note.notes);
 
   useEffect(() => {
-    console.log("Layout mounted");
     setLoader(true);
     authService
       .getCurrentUser()
       .then((userData) => {
         if (userData) {
-          console.log("User data:", userData);
           dispatch(login({ userData }));
         } else {
-          console.log("No user data, logging out");
           dispatch(logout());
         }
       })
@@ -68,9 +65,7 @@ function Layout() {
         <main
           className={`h-full w-full ${showHeader && "mt-20"} oveflow-y-scroll`}
         >
-          <div>Before outlet</div>
           <Outlet />
-          <div>After outlet</div>
         </main>
       </div>
     </>
