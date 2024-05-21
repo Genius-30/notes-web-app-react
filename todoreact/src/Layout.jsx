@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { CustomLoader, Header } from "./components/index";
 import { useDispatch, useSelector } from "react-redux";
-import { setNotes } from "./store/noteSlice";
 import authService from "./appwrite/auth";
 import { login, logout } from "./store/authSlice";
+import { ToastContainer } from "react-toastify";
+import { fetchNotes } from "./store/noteSlice";
 
 function Layout() {
   const dispatch = useDispatch();
@@ -12,7 +13,7 @@ function Layout() {
   const [loader, setLoader] = useState(false);
   const [authenticationComplete, setAuthenticationComplete] = useState(false);
   const authStatus = useSelector((state) => state.auth.status);
-  const notes = useSelector((state) => state.note.notes);
+  const userData = useSelector((state) => state.auth.userData);
 
   useEffect(() => {
     setLoader(true);
@@ -33,24 +34,11 @@ function Layout() {
   }, []);
 
   useEffect(() => {
-    if (authStatus) {
-      localStorage.setItem("notes", JSON.stringify(notes));
+    if (authStatus && userData.userData) {
+      const userId = userData.userData.$id;
+      dispatch(fetchNotes(userId));
     }
-  }, [notes, authStatus]);
-
-  useEffect(() => {
-    const storedNotes = localStorage.getItem("notes");
-
-    if (storedNotes) {
-      try {
-        const parsedNotes = JSON.parse(storedNotes);
-
-        dispatch(setNotes(parsedNotes));
-      } catch (error) {
-        console.error("Error parsing notes:", error);
-      }
-    }
-  }, []);
+  }, [authStatus, dispatch]);
 
   const showHeader = !["/login", "/signup"].includes(location.pathname);
 
@@ -68,6 +56,7 @@ function Layout() {
           <Outlet />
         </main>
       </div>
+      <ToastContainer />
     </>
   );
 }

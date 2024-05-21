@@ -1,17 +1,21 @@
 import { useRef, useState } from "react";
 import NoteForm from "./NoteForm";
 import NoteItem from "./NoteItem";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
-import { deleteNote } from "../store/noteSlice";
+import { useSelector, useDispatch } from "react-redux";
+import { clearSelectedNoteIds, fetchNotes } from "../store/noteSlice";
 import Button from "./Button";
+import { ToastContainer, toast } from "react-toastify";
+import databaseService from "../appwrite/db";
 
 function Notes() {
   const [isCheckVisible, setIsCheckVisible] = useState(false);
   const [isAddFormVisible, setIsAddFormVisible] = useState(false);
 
-  const dispatch = useDispatch();
   const notes = useSelector((state) => state.note.notes);
+
+  const dispatch = useDispatch();
+  const selectedNoteIds = useSelector((state) => state.note.selectedNoteIds);
+  const userData = useSelector((state) => state.auth.userData);
 
   const outerDivRef = useRef();
   const handleNoteFormDivClick = (e) => {
@@ -29,8 +33,20 @@ function Notes() {
     setIsCheckVisible(true);
   };
 
-  const confirmDelete = () => {
-    dispatch(deleteNote());
+  const confirmDelete = async () => {
+    const userId = userData.userData.$id;
+    if (selectedNoteIds.length > 0) {
+      try {
+        for (let id of selectedNoteIds) {
+          await databaseService.deleteNote(id);
+        }
+        dispatch(fetchNotes(userId));
+        dispatch(clearSelectedNoteIds());
+        toast.success("Notes deleted successfully");
+      } catch (error) {
+        toast.error("Something went wrong");
+      }
+    }
     setIsCheckVisible(false);
   };
 
@@ -53,7 +69,7 @@ function Notes() {
           <div className="w-full h-full flex flex-col gap-2 md:pt-2">
             <div className="h-auto w-full md:px-4">
               <div className="h-full w-full flex flex-col md:flex-row items-center gap-2 md:gap-4 whitespace-nowrap">
-                {notes?.length > 0 ? (
+                {notes.length > 0 ? (
                   <div className="w-full md:w-3/5">
                     <input
                       type="search"
@@ -66,18 +82,15 @@ function Notes() {
                 )}
                 <div className="flex gap-2 items-center justify-center self-end">
                   <Button
-                    bgColor="bg-green-600"
-                    className="block md:hidden py-3 w-auto"
+                    className="w-24 block md:hidden py-3"
                     children={"Add Note"}
                     onClick={() => setIsAddFormVisible(true)}
                   />
-                  {notes?.length > 0 ? (
+                  {notes.length > 0 ? (
                     <Button
-                      bgColor="bg-red-600"
-                      className="py-3 w-auto"
-                      children={
-                        isCheckVisible ? "Confirm Delete" : "Delete Note"
-                      }
+                      bgColor={isCheckVisible ? "bg-amber-500" : "bg-red-600"}
+                      className="w-24 py-3 ${}"
+                      children={isCheckVisible ? "Confirm" : "Delete"}
                       onClick={handleDelBtn}
                     />
                   ) : (
@@ -86,7 +99,7 @@ function Notes() {
                 </div>
               </div>
             </div>
-            {notes?.length > 0 ? (
+            {notes.length > 0 ? (
               <div
                 className="w-full h-auto grid gap-x-4 md:gap-x-8 gap-y-4 md:gap-y-6 overflow-scroll py-2 md:p-4 overflow-x-hidden"
                 style={{
@@ -94,7 +107,7 @@ function Notes() {
                 }}
               >
                 {notes.map((note) => (
-                  <div key={note.id}>
+                  <div key={note.$id}>
                     <NoteItem
                       height={"96"}
                       width={"full"}
@@ -109,6 +122,7 @@ function Notes() {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </>
   );
 }

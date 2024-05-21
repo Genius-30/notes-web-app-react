@@ -11,6 +11,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { login } from "../store/authSlice";
 import CustomLoader from "./CustomLoader";
+import { fetchNotes } from "../store/noteSlice";
 
 function Signup() {
   const navigate = useNavigate();
@@ -28,14 +29,10 @@ function Signup() {
     try {
       const userData = await authService.createAccount(data);
       if (userData) {
-        const currentUserData = authService.getCurrentUser();
+        const currentUserData = await authService.getCurrentUser();
         if (currentUserData)
-          dispatch(
-            login(
-              (await currentUserData).email,
-              (await currentUserData).password
-            )
-          );
+          dispatch(login(currentUserData.email, currentUserData.password));
+        dispatch(fetchNotes(currentUserData.$id));
         navigate("/");
         toast.success("Account created successfully!");
       }
@@ -158,7 +155,7 @@ function Signup() {
         </div>
       </div>
       {loader && <CustomLoader />}
-      <ToastContainer />
+      <ToastContainer position="bottom-right" />
     </div>
   );
 }

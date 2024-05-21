@@ -28,7 +28,7 @@ function Home() {
                 {notes?.length > 0 ? (
                   <div className="max-h-96 md:max-h-full w-full p-2 flex flex-col md:flex-row md:items-center lg:justify-center gap-4 overflow-scroll">
                     {recentNotes.map((note) => (
-                      <div key={note.id}>
+                      <div key={note.$id}>
                         <NoteItem
                           height={"auto"}
                           width={"52"}
