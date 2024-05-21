@@ -1,50 +1,53 @@
-import { createSlice, nanoid } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import databaseService from "../appwrite/db";
 
-const initialState = {
-  notes: [],
-  toogleToDelete: false,
-};
+export const fetchNotes = createAsyncThunk(
+  "note/fetchNotes",
+  async (userId) => {
+    if (!userId) {
+      throw new Error("User not authenticated");
+    }
+
+    const notesData = await databaseService.getNotesByUserId(userId);
+    if (notesData) {
+      return notesData.documents;
+    }
+    return [];
+  }
+);
 
 const noteSlice = createSlice({
   name: "note",
-  initialState,
+
+  initialState: {
+    notes: [],
+    selectedNoteIds: [],
+  },
+
   reducers: {
-    setNotes: (state, action) => {
+    toggleSelectNote: (state, action) => {
+      const noteId = action.payload;
+      if (state.selectedNoteIds.includes(noteId)) {
+        state.selectedNoteIds = state.selectedNoteIds.filter(
+          (id) => id !== noteId
+        );
+      } else {
+        state.selectedNoteIds.push(noteId);
+      }
+    },
+
+    clearSelectedNoteIds: (state) => {
+      state.selectedNoteIds = [];
+    },
+  },
+
+  extraReducers: (builder) => {
+    builder.addCase(fetchNotes.fulfilled, (state, action) => {
       state.notes = action.payload;
-    },
-    addNote: (state, action) => {
-      const note = {
-        id: nanoid(),
-        title: action.payload.title,
-        content: action.payload.content,
-        wantToDelete: false,
-      };
-      state.notes.unshift(note);
-    },
-    deleteNote: (state) => {
-      state.notes = state.notes.filter((note) => !note.wantToDelete);
-    },
-    updateNote: (state, action) => {
-      state.notes = state.notes.map((note) =>
-        note.id === action.payload.id
-          ? {
-              ...note,
-              title: action.payload.title,
-              content: action.payload.content,
-            }
-          : note
-      );
-    },
-    selectDeletion: (state, action) => {
-      state.notes = state.notes.map((note) =>
-        note.id === action.payload.id
-          ? { ...note, wantToDelete: !note.wantToDelete }
-          : note
-      );
-    },
+    });
   },
 });
 
-export const { addNote, deleteNote, updateNote, selectDeletion, setNotes } =
+export const { setNotes, toggleSelectNote, clearSelectedNoteIds } =
   noteSlice.actions;
 export default noteSlice.reducer;

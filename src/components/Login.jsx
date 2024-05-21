@@ -9,6 +9,7 @@ import authService from "../appwrite/auth";
 import { login as authLogin } from "../store/authSlice";
 import { useDispatch } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
+import { fetchNotes } from "../store/noteSlice";
 import "react-toastify/dist/ReactToastify.css";
 
 function Login() {
@@ -29,6 +30,7 @@ function Login() {
       if (session) {
         const userData = await authService.getCurrentUser();
         if (userData) dispatch(authLogin({ userData }));
+        dispatch(fetchNotes(userData.$id));
         navigate("/");
       }
       toast.success("Login Successfully");
@@ -131,7 +133,7 @@ function Login() {
         </div>
       </div>
       {loader && <CustomLoader />}
-      <ToastContainer />
+      <ToastContainer position="bottom-right" />
     </div>
   );
 }

@@ -1,29 +1,44 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { addNote } from "../store/noteSlice";
+import React, { useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { fetchNotes } from "../store/noteSlice";
+import databaseService from "../appwrite/db";
 
 function NoteForm({ onCancel }) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const contentInputRef = useRef(null);
+  const dispatch = useDispatch();
+  const userData = useSelector((state) => state.auth.userData);
 
-  const disptach = useDispatch();
-
-  const handleAddNoteClick = (e) => {
+  const handleAddNoteClick = async (e) => {
     e.preventDefault();
 
-    if (!title && !content) return;
-    disptach(addNote({ title, content }));
+    if (title === "" || content === "") {
+      toast.error("Empty note can't be created!");
+      return;
+    }
 
-    handleCancelClick();
+    const userId = userData.userData.$id;
+
+    try {
+      await databaseService.createNote({ title, content, userId });
+      dispatch(fetchNotes(userId));
+      handleCancelClick();
+    } catch (error) {
+      console.error("Error creating note:", error);
+      toast.error("Failed to create note!");
+    }
   };
 
   const handleCancelClick = () => {
-    return onCancel(), setTitle(""), setContent("");
+    onCancel();
+    setTitle("");
+    setContent("");
   };
 
   const handleContentDivClick = () => {
-    const contentInput = document.getElementById("contentinput");
-    contentInput.focus();
+    contentInputRef.current.focus();
   };
 
   return (
@@ -40,6 +55,7 @@ function NoteForm({ onCancel }) {
           className="rounded-lg w-full h-12 bg-transparent px-2 focus:outline-none caret-gray-100 focus:caret-gray-100 text-gray-100 text-xl lg:text-2xl"
         />
         <div
+          ref={contentInputRef}
           className="h-full w-full basis-full rounded-lg bg-transparent cursor-text"
           onClick={handleContentDivClick}
         >
