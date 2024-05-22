@@ -22,7 +22,7 @@ import { Provider } from "react-redux";
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />}>
-      <Route path="" element={<Home />} />
+      <Route index element={<Home />} />
       <Route
         path="login"
         element={
