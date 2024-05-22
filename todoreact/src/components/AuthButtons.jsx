@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import authService from "../appwrite/auth";
 import { toast } from "react-toastify";
 import Button from "./Button";

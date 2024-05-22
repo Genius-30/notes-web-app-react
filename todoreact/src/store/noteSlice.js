@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import databaseService from "../appwrite/db";
+import { logout } from "./authSlice";
 
 export const fetchNotes = createAsyncThunk(
   "note/fetchNotes",
@@ -44,6 +45,10 @@ const noteSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchNotes.fulfilled, (state, action) => {
       state.notes = action.payload;
+    });
+    builder.addCase(logout, (state) => {
+      state.notes = [];
+      state.selectedNoteIds = [];
     });
   },
 });
