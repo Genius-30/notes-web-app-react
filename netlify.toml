@@ -1,9 +1,9 @@
 [build]
   command = "npm run build"
-  publish = "build"
+  publish = "dist"
 
 [build.environment]
-   VITE_APPWRITE_ENDPOINT = "https://cloud.appwrite.io/v1"
+  VITE_APPWRITE_ENDPOINT = "https://cloud.appwrite.io/v1"
   VITE_APPWRITE_PROJECT_ID = "664781c3000614005ce4"
   VITE_APPWRITE_DATABASE_ID = "664a0de30014649fb6fb"
   VITE_APPWRITE_COLLECTION_ID = "664a0dea003a09c9869d"
