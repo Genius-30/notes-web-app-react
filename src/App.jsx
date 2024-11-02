@@ -6,7 +6,7 @@ import authService from "./appwrite/auth";
 import { login, logout } from "./store/authSlice";
 import { ToastContainer } from "react-toastify";
 import { fetchNotes } from "./store/noteSlice";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import {
   Home,
   Notes,
@@ -62,43 +62,41 @@ function Layout() {
         <main
           className={`h-full w-full ${showHeader && "mt-20"} oveflow-y-scroll`}
         >
-          <Router>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route
-                path="/login"
-                element={
-                  <AuthLayout authentication={false}>
-                    <Login />
-                  </AuthLayout>
-                }
-              />
-              <Route
-                path="/signup"
-                element={
-                  <AuthLayout authentication={false}>
-                    <Signup />
-                  </AuthLayout>
-                }
-              />
-              <Route
-                path="notes"
-                element={
-                  <AuthLayout authentication>
-                    <Notes />
-                  </AuthLayout>
-                }
-              />
-              <Route
-                path="notes/:noteId"
-                element={
-                  <AuthLayout authentication>
-                    <DetailNote />
-                  </AuthLayout>
-                }
-              />
-            </Routes>
-          </Router>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route
+              path="/login"
+              element={
+                <AuthLayout authentication={false}>
+                  <Login />
+                </AuthLayout>
+              }
+            />
+            <Route
+              path="/signup"
+              element={
+                <AuthLayout authentication={false}>
+                  <Signup />
+                </AuthLayout>
+              }
+            />
+            <Route
+              path="notes"
+              element={
+                <AuthLayout authentication>
+                  <Notes />
+                </AuthLayout>
+              }
+            />
+            <Route
+              path="notes/:noteId"
+              element={
+                <AuthLayout authentication>
+                  <DetailNote />
+                </AuthLayout>
+              }
+            />
+          </Routes>
         </main>
       </div>
       <ToastContainer />
